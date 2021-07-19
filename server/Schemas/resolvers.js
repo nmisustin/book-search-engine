@@ -25,6 +25,7 @@ const resolvers = {
         },
         login: async(parent, {email, password}) => {
             const user = await User.findOne({email});
+            
             if(!user){
                 throw new AuthenticationError('Incorrect credentials')
             }
@@ -33,7 +34,7 @@ const resolvers = {
                 throw new AuthenticationError('Incorrect credentials')
             }
             const token = signToken(user);
-            return(token, user)
+            return{token, user}
         },
         saveBook: async (parent, args, context) => {
             if(context.user){

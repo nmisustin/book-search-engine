@@ -16,9 +16,11 @@ const resolvers = {
     },
     Mutation: {
         addUser: async (parent, args) => {
+            console.log('I got here');
             const user = await User.create(args);
             const token = signToken(user);
-
+            console.log(user);
+            console.log(token);
             return {token, user};
         },
         login: async(parent, {email, password}) => {
@@ -38,7 +40,7 @@ const resolvers = {
                 const book = await Book.create(args);
                 await User.findByIdAndUpdate(
                     {_id: context.user._id},
-                    {$push: {books: book.bookId}},
+                    {$push: {savedBooks: book.bookId}},
                     {new:true}
                 )
             }
@@ -48,10 +50,12 @@ const resolvers = {
             if(context.user){
                 User.findByIdAndUpdate(
                     {_id: context.user._id},
-                    {$pull: {books: {bookId: args.bookId}}},
+                    {$pull: {savedBooks: {bookId: args.bookId}}},
                     {new: true}
                 )
             }
         }
     }
 }
+
+module.exports = resolvers;

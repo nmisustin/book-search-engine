@@ -49,12 +49,15 @@ const resolvers = {
             throw new AuthenticationError('You need to be logged in to add a book!');
         },
         removeBook : async (parent, args, context) => {
+            console.log(args);
             if(context.user){
-                User.findByIdAndUpdate(
+                const user= await User.findByIdAndUpdate(
                     {_id: context.user._id},
                     {$pull: {savedBooks: {bookId: args.bookId}}},
                     {new: true}
                 )
+                console.log(user);
+                return user;
             }
         }
     }
